@@ -61,13 +61,13 @@ func (p *predicate) toString() string {
 
 	if p.facets {
 		if len(p.facetNames) == 0 && p.facetFilter == nil {
-			s += " @facets "
+			s += " @facets"
 		} else {
 			if p.facetFilter != nil {
-				s += " @facets(" + p.facetFilter.toString() + ") "
+				s += " @facets(" + p.facetFilter.toString() + ")"
 			}
 			if len(p.facetNames) > 0 {
-				s += " @facets(" + strings.Join(p.facetNames, ", ") + ") "
+				s += " @facets(" + strings.Join(p.facetNames, ", ") + ")"
 			}
 		}
 	}

@@ -99,3 +99,17 @@ type funcAllOfTerms struct {
 func (p funcAllOfTerms) toString() string {
 	return fmt.Sprintf("allofterms(%s, %q)", p.name, p.terms)
 }
+
+// And is a composite function that requires both the left and right side to be true.
+func And(left, right expr) funcAnd {
+	return funcAnd{left: left, right: right}
+}
+
+type funcAnd struct {
+	left  expr
+	right expr
+}
+
+func (p funcAnd) toString() string {
+	return p.left.toString() + " AND " + p.right.toString()
+}

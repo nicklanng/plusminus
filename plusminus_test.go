@@ -146,3 +146,124 @@ name@en
 		t.Errorf("\nexpected: %s\ngot: %s", expected, result)
 	}
 }
+
+func TestDataQueryWithFacets(t *testing.T) {
+	q := pm.Query("").Blocks(
+		pm.Block("data", pm.Eq("name", "Alice")).Predicates(
+			pm.Predicate("name"),
+			pm.Predicate("mobile").Facets(),
+			pm.Predicate("car").Facets(),
+		),
+	)
+
+	expected := `query {
+data(func: eq(name, "Alice")) {
+name
+mobile @facets
+car @facets
+}
+}`
+
+	result := q.ToString()
+	if result != expected {
+		t.Errorf("\nexpected: %s\ngot: %s", expected, result)
+	}
+}
+
+func TestDataQueryWithFacetsSelectors(t *testing.T) {
+	q := pm.Query("").Blocks(
+		pm.Block("data", pm.Eq("name", "Alice")).Predicates(
+			pm.Predicate("name"),
+			pm.Predicate("mobile").Facets("since"),
+			pm.Predicate("car").Facets("since"),
+		),
+	)
+
+	expected := `query {
+data(func: eq(name, "Alice")) {
+name
+mobile @facets(since)
+car @facets(since)
+}
+}`
+
+	result := q.ToString()
+	if result != expected {
+		t.Errorf("\nexpected: %s\ngot: %s", expected, result)
+	}
+}
+
+func TestDataQueryWithFacetsAliases(t *testing.T) {
+	q := pm.Query("").Blocks(
+		pm.Block("data", pm.Eq("name", "Alice")).Predicates(
+			pm.Predicate("name"),
+			pm.Predicate("mobile"),
+			pm.Predicate("car").Facets("car_since: since"),
+			pm.Predicate("friend").Facets("close_friend: close"),
+		),
+	)
+
+	expected := `query {
+data(func: eq(name, "Alice")) {
+name
+mobile
+car @facets(car_since: since)
+friend @facets(close_friend: close)
+}
+}`
+
+	result := q.ToString()
+	if result != expected {
+		t.Errorf("\nexpected: %s\ngot: %s", expected, result)
+	}
+}
+
+func TestDataQueryWithFacetsInUID(t *testing.T) {
+	q := pm.Query("").Blocks(
+		pm.Block("data", pm.Eq("name", "Alice")).Predicates(
+			pm.Predicate("name"),
+			pm.Predicate("friend").Facets("close").Predicates(
+				pm.Predicate("name"),
+				pm.Predicate("car").Facets(),
+			),
+		),
+	)
+
+	expected := `query {
+data(func: eq(name, "Alice")) {
+name
+friend @facets(close) {
+name
+car @facets
+}
+}
+}`
+
+	result := q.ToString()
+	if result != expected {
+		t.Errorf("\nexpected: %s\ngot: %s", expected, result)
+	}
+}
+
+func TestDataQueryWithFacetsFilterWithAnd(t *testing.T) {
+	q := pm.Query("").Blocks(
+		pm.Block("data", pm.Eq("name", "Alice")).Predicates(
+			pm.Predicate("friend").FacetFilter(pm.And(pm.Eq("close", true), pm.Eq("relative", true))).Facets("relative").Predicates(
+				pm.Predicate("name"),
+			),
+		),
+	)
+
+	expected := `query {
+data(func: eq(name, "Alice")) {
+friend @facets(eq(close, true) AND eq(relative, true)) @facets(relative) {
+name
+}
+}
+}`
+
+	result := q.ToString()
+	if result != expected {
+		t.Errorf("\nexpected: %s\ngot: %s", expected, result)
+	}
+}
