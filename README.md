@@ -1,6 +1,6 @@
 # plusminus
 
-[![Build Status](https://github.com/nicklanng/plusminus/workflows/CI/badge.svg)](https://github.com/nicklanng/plusminus/workflows/CI)
+[![Build Status](https://github.com/nicklanng/plusminus/workflows/CI/badge.svg)](https://github.com/nicklanng/plusminus/actions?query=workflow%3ACI)
 [![Go Report Card](https://goreportcard.com/badge/github.com/nicklanng/plusminus)](https://goreportcard.com/report/github.com/nicklanng/plusminus)
 [![Documentation](https://godoc.org/github.com/nicklanng/plusminus?status.svg)](http://godoc.org/github.com/nicklanng/plusminus)
 [![GitHub issues](https://img.shields.io/github/issues/nicklanng/plusminus.svg)](https://github.com/nicklanng/plusminus/issues)
