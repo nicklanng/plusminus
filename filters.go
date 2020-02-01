@@ -26,5 +26,10 @@ type filterTermEq struct {
 }
 
 func (p filterTermEq) toString() string {
-	return fmt.Sprintf("eq(%s, %v)", p.name, p.val)
+	switch p.val.(type) {
+	case string:
+		return fmt.Sprintf("eq(%s, %q)", p.name, p.val)
+	default:
+		return fmt.Sprintf("eq(%s, %v)", p.name, p.val)
+	}
 }
