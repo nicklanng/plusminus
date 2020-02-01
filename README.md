@@ -31,5 +31,4 @@ q := pm.Query("queryfriends").Blocks(
     ),
   ),
 ).ToString()
-}
 ```
