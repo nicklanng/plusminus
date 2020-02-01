@@ -3,16 +3,21 @@ package plusminus
 import "fmt"
 
 // UID is a function that selects a node with the provided uid.
-func UID(val uint64) funcUID {
+func UID(val interface{}) funcUID {
 	return funcUID{val: val}
 }
 
 type funcUID struct {
-	val uint64
+	val interface{}
 }
 
 func (p funcUID) toString() string {
-	return fmt.Sprintf("uid(%d)", p.val) + ")"
+	switch p.val.(type) {
+	case int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64:
+		return fmt.Sprintf("uid(0x%x)", p.val)
+	default:
+		return fmt.Sprintf("uid(%s)", p.val)
+	}
 }
 
 // Eq is a function that selects nodes with the matching value.
@@ -26,10 +31,13 @@ type funcEq struct {
 }
 
 func (p funcEq) toString() string {
-	switch p.val.(type) {
+	switch v := p.val.(type) {
 	case string:
-		return fmt.Sprintf("eq(%s, %q)", p.name, p.val)
+		if v[0] == '$' {
+			return fmt.Sprintf("eq(%s, %s)", p.name, v)
+		}
+		return fmt.Sprintf("eq(%s, %q)", p.name, v)
 	default:
-		return fmt.Sprintf("eq(%s, %v)", p.name, p.val)
+		return fmt.Sprintf("eq(%s, %v)", p.name, v)
 	}
 }
