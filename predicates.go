@@ -12,10 +12,6 @@ func Predicate(name string) *predicate {
 type predicateList []*predicate
 
 func (p predicateList) toString() string {
-	if len(p) == 0 {
-		return ""
-	}
-
 	var predicatesGraphQLpm string
 	for i := 0; i < len(p); i++ {
 		predicatesGraphQLpm += p[i].toString() + "\n"
