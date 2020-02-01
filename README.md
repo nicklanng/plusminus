@@ -22,7 +22,7 @@ The library only creates a query string, which can be then passed to something l
 ```go
 import pm "github.com/nicklanng/plusminus"
 
-q := pm.Query("").Blocks(
+q := pm.Query("queryfriends").Blocks(
   pm.Block("data", pm.Eq("name", "Alice")).Predicates(
     pm.Predicate("name"),
     pm.Predicate("friend").Facets("close").Predicates(
