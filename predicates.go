@@ -2,6 +2,7 @@ package plusminus
 
 import "strings"
 
+// Predicate defines a predicate to return from a node.
 func Predicate(name string) *predicate {
 	return &predicate{
 		name: name,
@@ -31,6 +32,8 @@ type predicate struct {
 	predicates  predicateList
 }
 
+// Predicates allows you to add a number of predicates to the current returned node.
+// Predicates can be nested.
 func (p *predicate) Predicates(preds ...*predicate) *predicate {
 	p.predicates = append(p.predicates, preds...)
 	return p

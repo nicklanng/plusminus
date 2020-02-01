@@ -22,7 +22,7 @@ func (q *block) Normalize() *block {
 	return q
 }
 
-// Predicates is the list of predicates to return from the current node.
+// Predicates allows you to add a number of predicates to the current returned node.
 // Predicates can be nested.
 func (q *block) Predicates(preds ...*predicate) *block {
 	q.predicates = append(q.predicates, preds...)
