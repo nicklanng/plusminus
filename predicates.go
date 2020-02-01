@@ -1,6 +1,9 @@
 package plusminus
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 // Predicate defines a predicate to return from a node.
 func Predicate(name string) *predicate {
@@ -23,6 +26,8 @@ func (p predicateList) toString() string {
 type predicate struct {
 	name        string
 	filter      expr
+	first       interface{}
+	offset      interface{}
 	facets      bool
 	facetNames  []string
 	facetFilter expr
@@ -41,6 +46,16 @@ func (p *predicate) Filter(filter expr) *predicate {
 	return p
 }
 
+func (p *predicate) First(val interface{}) *predicate {
+	p.first = val
+	return p
+}
+
+func (p *predicate) Offset(val interface{}) *predicate {
+	p.offset = val
+	return p
+}
+
 func (p *predicate) Facets(names ...string) *predicate {
 	p.facets = true
 	p.facetNames = names
@@ -54,6 +69,34 @@ func (p *predicate) FacetFilter(filter expr) *predicate {
 
 func (p *predicate) toString() string {
 	s := p.name
+
+	if p.first != nil || p.offset != nil {
+		s += " ("
+
+		var pagination []string
+
+		if p.first != nil {
+			switch p.first.(type) {
+			case int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64:
+				pagination = append(pagination, fmt.Sprintf("first: %d", p.first))
+			default:
+				pagination = append(pagination, fmt.Sprintf("first: %s", p.first))
+			}
+		}
+
+		if p.offset != nil {
+			switch p.offset.(type) {
+			case int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64:
+				pagination = append(pagination, fmt.Sprintf("offset: %d", p.offset))
+			default:
+				pagination = append(pagination, fmt.Sprintf("offset: %s", p.offset))
+			}
+		}
+
+		s += strings.Join(pagination, ", ")
+
+		s += ")"
+	}
 
 	if p.filter != nil {
 		s += " @filter(" + p.filter.toString() + ")"

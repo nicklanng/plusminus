@@ -97,6 +97,9 @@ type funcAllOfTerms struct {
 }
 
 func (p funcAllOfTerms) toString() string {
+	if p.terms[0] == '$' {
+		return fmt.Sprintf("allofterms(%s, %s)", p.name, p.terms)
+	}
 	return fmt.Sprintf("allofterms(%s, %q)", p.name, p.terms)
 }
 

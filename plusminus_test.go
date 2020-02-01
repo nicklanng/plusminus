@@ -267,3 +267,34 @@ name
 		t.Errorf("\nexpected: %s\ngot: %s", expected, result)
 	}
 }
+
+func TestMeQueryWithPaginationAndVariables(t *testing.T) {
+	q := pm.Query("test").Variables("$b: int", "$name: string").Blocks(
+		pm.Block("me", pm.AllOfTerms("name@en", "$name")).Predicates(
+			pm.Predicate("name@en"),
+			pm.Predicate("director.film").First(2).Offset("$b").Predicates(
+				pm.Predicate("name @en"),
+				pm.Predicate("genre").First("$a").Predicates(
+					pm.Predicate("name@en"),
+				),
+			),
+		),
+	)
+
+	expected := `query test($b: int, $name: string) {
+me(func: allofterms(name@en, $name)) {
+name@en
+director.film (first: 2, offset: $b) {
+name @en
+genre (first: $a) {
+name@en
+}
+}
+}
+}`
+
+	result := q.ToString()
+	if result != expected {
+		t.Errorf("\nexpected: %s\ngot: %s", expected, result)
+	}
+}
