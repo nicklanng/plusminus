@@ -26,5 +26,5 @@ func (p *funcStmt) Predicates(preds ...*predicate) *funcStmt {
 }
 
 func (p funcStmt) toString() string {
-	return "q(func: " + p.filterTerm.toString() + p.predicates.toString()
+	return "q(func: " + p.filterTerm.toString() + p.predicates.toString() + ")"
 }

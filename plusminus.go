@@ -20,6 +20,6 @@ func (q query) ToString() string {
 	for i := range q.funcs {
 		s += q.funcs[i].toString()
 	}
-	s += "}"
+	s += "}\n"
 	return s
 }
