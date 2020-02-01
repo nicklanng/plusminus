@@ -15,7 +15,7 @@ A query builder for [dgraph](https://dgraph.io/).
 import "github.com/nicklanng/plusminus"
 ```
 
-PlusMinus is to help compose query statements for dgraph, especially in cases that queries must be built bit by bit.
+PlusMinus helps to compose query statements for dgraph, especially in cases that queries must be built bit by bit.
 
 The library only creates a query string, which can be then passed to something like [github.com/dgraph-io/dgo](https://github.com/dgraph-io/dgo).
 
