@@ -26,6 +26,7 @@ func (p predicateList) toString() string {
 
 type predicate struct {
 	name        string
+	filter      expr
 	facets      bool
 	facetNames  []string
 	facetFilter expr
@@ -36,6 +37,11 @@ type predicate struct {
 // Predicates can be nested.
 func (p *predicate) Predicates(preds ...*predicate) *predicate {
 	p.predicates = append(p.predicates, preds...)
+	return p
+}
+
+func (p *predicate) Filter(filter expr) *predicate {
+	p.filter = filter
 	return p
 }
 
@@ -51,19 +57,27 @@ func (p *predicate) FacetFilter(filter expr) *predicate {
 }
 
 func (p *predicate) toString() string {
-	s := p.name + " "
+	s := p.name
+
+	if p.filter != nil {
+		s += " @filter(" + p.filter.toString() + ")"
+	}
+
 	if p.facets {
 		if len(p.facetNames) == 0 && p.facetFilter == nil {
-			s += "@facets "
+			s += " @facets "
 		} else {
 			if p.facetFilter != nil {
-				s += "@facets(" + p.facetFilter.toString() + ") "
+				s += " @facets(" + p.facetFilter.toString() + ") "
 			}
 			if len(p.facetNames) > 0 {
-				s += "@facets(" + strings.Join(p.facetNames, ", ") + ") "
+				s += " @facets(" + strings.Join(p.facetNames, ", ") + ") "
 			}
 		}
 	}
-	s += p.predicates.toString()
+	if len(p.predicates) > 0 {
+		s += " " + p.predicates.toString()
+	}
+
 	return s
 }

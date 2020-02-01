@@ -12,23 +12,37 @@ type block struct {
 	name       string
 	function   expr
 	normalize  bool
+	filter     expr
 	predicates predicateList
 }
 
 // Normalize will toggle on normalization of predicate and facet results.
 // Only predicates and facets with an alias will be returned.
-func (q *block) Normalize() *block {
-	q.normalize = true
-	return q
+func (b *block) Normalize() *block {
+	b.normalize = true
+	return b
+}
+
+func (b *block) Filter(filter expr) *block {
+	b.filter = filter
+	return b
 }
 
 // Predicates allows you to add a number of predicates to the current returned node.
 // Predicates can be nested.
-func (q *block) Predicates(preds ...*predicate) *block {
-	q.predicates = append(q.predicates, preds...)
-	return q
+func (b *block) Predicates(preds ...*predicate) *block {
+	b.predicates = append(b.predicates, preds...)
+	return b
 }
 
-func (q block) toString() string {
-	return q.name + "(func: " + q.function.toString() + ") " + q.predicates.toString() + "\n"
+func (b block) toString() string {
+	s := b.name + "(func: " + b.function.toString() + ") "
+
+	if b.filter != nil {
+		s += "@filter(" + b.filter.toString() + ") "
+	}
+
+	s += b.predicates.toString() + "\n"
+
+	return s
 }
