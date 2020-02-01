@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestFilterTermEq_toString(t *testing.T) {
+func TestFunctionEq_toString(t *testing.T) {
 	cases := map[string]struct {
 		name     string
 		value    interface{}

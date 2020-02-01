@@ -1,16 +1,16 @@
 package plusminus
 
 // Query is the top level structure of a dgraph query.
-func Query(name string, filterTerm expr) *query {
+func Query(name string, function expr) *query {
 	return &query{
-		name:       name,
-		filterTerm: filterTerm,
+		name:     name,
+		function: function,
 	}
 }
 
 type query struct {
 	name       string
-	filterTerm expr
+	function   expr
 	normalize  bool
 	predicates predicateList
 }
@@ -30,5 +30,5 @@ func (q *query) Predicates(preds ...*predicate) *query {
 }
 
 func (q query) ToString() string {
-	return q.name + "(func: " + q.filterTerm.toString() + ") " + q.predicates.toString() + "\n"
+	return q.name + "(func: " + q.function.toString() + ") " + q.predicates.toString() + "\n"
 }
