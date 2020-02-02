@@ -17,15 +17,15 @@ func Test_funcUID_toString(t *testing.T) {
 			values:   []interface{}{uint64(17)},
 			expected: "uid(0x11)",
 		},
-		"mulitple int values": {
+		"multiple int values": {
 			values:   []interface{}{uint64(17), uint64(18)},
 			expected: "uid(0x11, 0x12)",
 		},
-		"mulitple variable values": {
+		"multiple variable values": {
 			values:   []interface{}{"$1", "$2"},
 			expected: "uid($1, $2)",
 		},
-		"mulitple variable and int values": {
+		"multiple variable and int values": {
 			values:   []interface{}{"$1", uint64(17), "$2"},
 			expected: "uid($1, 0x11, $2)",
 		},
