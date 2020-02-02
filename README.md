@@ -30,5 +30,5 @@ q := pm.Query("queryfriends").Blocks(
       pm.Predicate("car").Facets(),
     ),
   ),
-).ToString()
+).String()
 ```
