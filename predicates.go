@@ -25,6 +25,7 @@ func (p predicateList) toString() string {
 
 type predicate struct {
 	name        string
+	normalize   bool
 	filter      expr
 	first       interface{}
 	offset      interface{}
@@ -32,6 +33,13 @@ type predicate struct {
 	facetNames  []string
 	facetFilter expr
 	predicates  predicateList
+}
+
+// Normalize will toggle on normalization of predicate and facet results.
+// Only predicates and facets with an alias will be returned.
+func (p *predicate) Normalize() *predicate {
+	p.normalize = true
+	return p
 }
 
 // Predicates allows you to add a number of predicates to the current returned node.
@@ -71,7 +79,7 @@ func (p *predicate) toString() string {
 	s := p.name
 
 	if p.first != nil || p.offset != nil {
-		s += " ("
+		s += "("
 
 		var pagination []string
 
@@ -114,6 +122,11 @@ func (p *predicate) toString() string {
 			}
 		}
 	}
+
+	if p.normalize {
+		s += " @normalize"
+	}
+
 	if len(p.predicates) > 0 {
 		s += " " + p.predicates.toString()
 	}

@@ -273,7 +273,7 @@ func TestMeQueryWithPaginationAndVariables(t *testing.T) {
 		pm.Block("me", pm.AllOfTerms("name@en", "$name")).Predicates(
 			pm.Predicate("name@en"),
 			pm.Predicate("director.film").First(2).Offset("$b").Predicates(
-				pm.Predicate("name @en"),
+				pm.Predicate("name@en"),
 				pm.Predicate("genre").First("$a").Predicates(
 					pm.Predicate("name@en"),
 				),
@@ -284,10 +284,108 @@ func TestMeQueryWithPaginationAndVariables(t *testing.T) {
 	expected := `query test($b: int, $name: string) {
 me(func: allofterms(name@en, $name)) {
 name@en
-director.film (first: 2, offset: $b) {
-name @en
-genre (first: $a) {
+director.film(first: 2, offset: $b) {
 name@en
+genre(first: $a) {
+name@en
+}
+}
+}
+}`
+
+	result := q.ToString()
+	if result != expected {
+		t.Errorf("\nexpected: %s\ngot: %s", expected, result)
+	}
+}
+
+func TestDirectorQueryWithNormalization(t *testing.T) {
+	q := pm.Query("").Blocks(
+		pm.Block("director", pm.AllOfTerms("name@en", "steven spielberg")).Normalize().Predicates(
+			pm.Predicate("director: name@en"),
+			pm.Predicate("director.film").Predicates(
+				pm.Predicate("film: name@en"),
+				pm.Predicate("initial_release_date"),
+				pm.Predicate("starring").First(2).Predicates(
+					pm.Predicate("performance.actor").Predicates(
+						pm.Predicate("actor: name@en"),
+					),
+					pm.Predicate("performance.character").Predicates(
+						pm.Predicate("character: name@en"),
+					),
+				),
+				pm.Predicate("country").Predicates(
+					pm.Predicate("country: name@en"),
+				),
+			),
+		),
+	)
+
+	expected := `query {
+director(func: allofterms(name@en, "steven spielberg")) @normalize {
+director: name@en
+director.film {
+film: name@en
+initial_release_date
+starring(first: 2) {
+performance.actor {
+actor: name@en
+}
+performance.character {
+character: name@en
+}
+}
+country {
+country: name@en
+}
+}
+}
+}`
+
+	result := q.ToString()
+	if result != expected {
+		t.Errorf("\nexpected: %s\ngot: %s", expected, result)
+	}
+}
+
+func TestDirectorQueryWithNestedNormalization(t *testing.T) {
+	q := pm.Query("").Blocks(
+		pm.Block("director", pm.AllOfTerms("name@en", "steven spielberg")).Predicates(
+			pm.Predicate("director: name@en"),
+			pm.Predicate("director.film").Predicates(
+				pm.Predicate("film: name@en"),
+				pm.Predicate("initial_release_date"),
+				pm.Predicate("starring").First(2).Normalize().Predicates(
+					pm.Predicate("performance.actor").Predicates(
+						pm.Predicate("actor: name@en"),
+					),
+					pm.Predicate("performance.character").Predicates(
+						pm.Predicate("character: name@en"),
+					),
+				),
+				pm.Predicate("country").Predicates(
+					pm.Predicate("country: name@en"),
+				),
+			),
+		),
+	)
+
+	expected := `query {
+director(func: allofterms(name@en, "steven spielberg")) {
+director: name@en
+director.film {
+film: name@en
+initial_release_date
+starring(first: 2) @normalize {
+performance.actor {
+actor: name@en
+}
+performance.character {
+character: name@en
+}
+}
+country {
+country: name@en
 }
 }
 }

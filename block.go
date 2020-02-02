@@ -42,6 +42,10 @@ func (b block) toString() string {
 		s += "@filter(" + b.filter.toString() + ") "
 	}
 
+	if b.normalize {
+		s += "@normalize "
+	}
+
 	s += b.predicates.toString() + "\n"
 
 	return s
