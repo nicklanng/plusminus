@@ -25,7 +25,7 @@ netflix_id
 }
 }`
 
-	result := q.ToString()
+	result := q.String()
 	if result != expected {
 		t.Errorf("\nexpected: %s\ngot: %s", expected, result)
 	}
@@ -50,7 +50,7 @@ netflix_id
 }
 }`
 
-	result := q.ToString()
+	result := q.String()
 	if result != expected {
 		t.Errorf("\nexpected: %s\ngot: %s", expected, result)
 	}
@@ -87,7 +87,7 @@ name@en
 }
 }`
 
-	result := q.ToString()
+	result := q.String()
 	if result != expected {
 		t.Errorf("\nexpected: %s\ngot: %s", expected, result)
 	}
@@ -116,7 +116,7 @@ initial_release_date
 }
 }`
 
-	result := q.ToString()
+	result := q.String()
 	if result != expected {
 		t.Errorf("\nexpected: %s\ngot: %s", expected, result)
 	}
@@ -141,7 +141,7 @@ name@en
 }
 }`
 
-	result := q.ToString()
+	result := q.String()
 	if result != expected {
 		t.Errorf("\nexpected: %s\ngot: %s", expected, result)
 	}
@@ -164,7 +164,7 @@ car @facets
 }
 }`
 
-	result := q.ToString()
+	result := q.String()
 	if result != expected {
 		t.Errorf("\nexpected: %s\ngot: %s", expected, result)
 	}
@@ -187,7 +187,7 @@ car @facets(since)
 }
 }`
 
-	result := q.ToString()
+	result := q.String()
 	if result != expected {
 		t.Errorf("\nexpected: %s\ngot: %s", expected, result)
 	}
@@ -212,7 +212,7 @@ friend @facets(close_friend: close)
 }
 }`
 
-	result := q.ToString()
+	result := q.String()
 	if result != expected {
 		t.Errorf("\nexpected: %s\ngot: %s", expected, result)
 	}
@@ -239,7 +239,7 @@ car @facets
 }
 }`
 
-	result := q.ToString()
+	result := q.String()
 	if result != expected {
 		t.Errorf("\nexpected: %s\ngot: %s", expected, result)
 	}
@@ -262,7 +262,7 @@ name
 }
 }`
 
-	result := q.ToString()
+	result := q.String()
 	if result != expected {
 		t.Errorf("\nexpected: %s\ngot: %s", expected, result)
 	}
@@ -293,7 +293,7 @@ name@en
 }
 }`
 
-	result := q.ToString()
+	result := q.String()
 	if result != expected {
 		t.Errorf("\nexpected: %s\ngot: %s", expected, result)
 	}
@@ -342,7 +342,7 @@ country: name@en
 }
 }`
 
-	result := q.ToString()
+	result := q.String()
 	if result != expected {
 		t.Errorf("\nexpected: %s\ngot: %s", expected, result)
 	}
@@ -391,7 +391,7 @@ country: name@en
 }
 }`
 
-	result := q.ToString()
+	result := q.String()
 	if result != expected {
 		t.Errorf("\nexpected: %s\ngot: %s", expected, result)
 	}
