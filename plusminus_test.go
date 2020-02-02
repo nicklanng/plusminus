@@ -17,15 +17,15 @@ func TestBladerunnerQuery(t *testing.T) {
 	)
 
 	expected := `query {
-bladerunner(func: eq(name@en, "Blade Runner")) {
-uid
-name@en
-initial_release_date
-netflix_id
-}
+  bladerunner(func: eq(name@en, "Blade Runner")) {
+    uid
+    name@en
+    initial_release_date
+    netflix_id
+  }
 }`
 
-	result := q.String()
+	result := q.StringIndented()
 	if result != expected {
 		t.Errorf("\nexpected: %s\ngot: %s", expected, result)
 	}
@@ -42,15 +42,15 @@ func TestMoviesQueryWithMultipleUIDs(t *testing.T) {
 	)
 
 	expected := `query {
-movies(func: uid(0xb5849, 0x394c)) {
-uid
-name@en
-initial_release_date
-netflix_id
-}
+  movies(func: uid(0xb5849, 0x394c)) {
+    uid
+    name@en
+    initial_release_date
+    netflix_id
+  }
 }`
 
-	result := q.String()
+	result := q.StringIndented()
 	if result != expected {
 		t.Errorf("\nexpected: %s\ngot: %s", expected, result)
 	}
@@ -73,21 +73,21 @@ func TestBRCharactersQueryWithNestedPredicates(t *testing.T) {
 	)
 
 	expected := `query {
-brCharacters(func: eq(name@en, "Blade Runner")) {
-name@en
-initial_release_date
-starring {
-performance.actor {
-name@en
-}
-performance.character {
-name@en
-}
-}
-}
+  brCharacters(func: eq(name@en, "Blade Runner")) {
+    name@en
+    initial_release_date
+    starring {
+      performance.actor {
+        name@en
+      }
+      performance.character {
+        name@en
+      }
+    }
+  }
 }`
 
-	result := q.String()
+	result := q.StringIndented()
 	if result != expected {
 		t.Errorf("\nexpected: %s\ngot: %s", expected, result)
 	}
@@ -106,17 +106,17 @@ func TestScottQueryWithFilters(t *testing.T) {
 	)
 
 	expected := `query {
-scott(func: eq(name@en, "Ridley Scott")) {
-name@en
-initial_release_date
-director.film @filter(le(initial_release_date, "2000")) {
-name@en
-initial_release_date
-}
-}
+  scott(func: eq(name@en, "Ridley Scott")) {
+    name@en
+    initial_release_date
+    director.film @filter(le(initial_release_date, "2000")) {
+      name@en
+      initial_release_date
+    }
+  }
 }`
 
-	result := q.String()
+	result := q.StringIndented()
 	if result != expected {
 		t.Errorf("\nexpected: %s\ngot: %s", expected, result)
 	}
@@ -133,15 +133,15 @@ func TestMeQueryWithHasAndAllOfTermsFilter(t *testing.T) {
 	)
 
 	expected := `query {
-me(func: eq(name@en, "Steven Spielberg")) @filter(has(director.film)) {
-name@en
-director.film @filter(allofterms(name@en, "jones indiana")) {
-name@en
-}
-}
+  me(func: eq(name@en, "Steven Spielberg")) @filter(has(director.film)) {
+    name@en
+    director.film @filter(allofterms(name@en, "jones indiana")) {
+      name@en
+    }
+  }
 }`
 
-	result := q.String()
+	result := q.StringIndented()
 	if result != expected {
 		t.Errorf("\nexpected: %s\ngot: %s", expected, result)
 	}
@@ -157,14 +157,14 @@ func TestDataQueryWithFacets(t *testing.T) {
 	)
 
 	expected := `query {
-data(func: eq(name, "Alice")) {
-name
-mobile @facets
-car @facets
-}
+  data(func: eq(name, "Alice")) {
+    name
+    mobile @facets
+    car @facets
+  }
 }`
 
-	result := q.String()
+	result := q.StringIndented()
 	if result != expected {
 		t.Errorf("\nexpected: %s\ngot: %s", expected, result)
 	}
@@ -180,14 +180,14 @@ func TestDataQueryWithFacetsSelectors(t *testing.T) {
 	)
 
 	expected := `query {
-data(func: eq(name, "Alice")) {
-name
-mobile @facets(since)
-car @facets(since)
-}
+  data(func: eq(name, "Alice")) {
+    name
+    mobile @facets(since)
+    car @facets(since)
+  }
 }`
 
-	result := q.String()
+	result := q.StringIndented()
 	if result != expected {
 		t.Errorf("\nexpected: %s\ngot: %s", expected, result)
 	}
@@ -204,15 +204,15 @@ func TestDataQueryWithFacetsAliases(t *testing.T) {
 	)
 
 	expected := `query {
-data(func: eq(name, "Alice")) {
-name
-mobile
-car @facets(car_since: since)
-friend @facets(close_friend: close)
-}
+  data(func: eq(name, "Alice")) {
+    name
+    mobile
+    car @facets(car_since: since)
+    friend @facets(close_friend: close)
+  }
 }`
 
-	result := q.String()
+	result := q.StringIndented()
 	if result != expected {
 		t.Errorf("\nexpected: %s\ngot: %s", expected, result)
 	}
@@ -230,16 +230,16 @@ func TestDataQueryWithFacetsInUID(t *testing.T) {
 	)
 
 	expected := `query {
-data(func: eq(name, "Alice")) {
-name
-friend @facets(close) {
-name
-car @facets
-}
-}
+  data(func: eq(name, "Alice")) {
+    name
+    friend @facets(close) {
+      name
+      car @facets
+    }
+  }
 }`
 
-	result := q.String()
+	result := q.StringIndented()
 	if result != expected {
 		t.Errorf("\nexpected: %s\ngot: %s", expected, result)
 	}
@@ -255,14 +255,14 @@ func TestDataQueryWithFacetsFilterWithAnd(t *testing.T) {
 	)
 
 	expected := `query {
-data(func: eq(name, "Alice")) {
-friend @facets(eq(close, true) AND eq(relative, true)) @facets(relative) {
-name
-}
-}
+  data(func: eq(name, "Alice")) {
+    friend @facets(eq(close, true) AND eq(relative, true)) @facets(relative) {
+      name
+    }
+  }
 }`
 
-	result := q.String()
+	result := q.StringIndented()
 	if result != expected {
 		t.Errorf("\nexpected: %s\ngot: %s", expected, result)
 	}
@@ -282,18 +282,18 @@ func TestMeQueryWithPaginationAndVariables(t *testing.T) {
 	)
 
 	expected := `query test($b: int, $name: string) {
-me(func: allofterms(name@en, $name)) {
-name@en
-director.film(first: 2, offset: $b) {
-name@en
-genre(first: $a) {
-name@en
-}
-}
-}
+  me(func: allofterms(name@en, $name)) {
+    name@en
+    director.film(first: 2, offset: $b) {
+      name@en
+      genre(first: $a) {
+        name@en
+      }
+    }
+  }
 }`
 
-	result := q.String()
+	result := q.StringIndented()
 	if result != expected {
 		t.Errorf("\nexpected: %s\ngot: %s", expected, result)
 	}
@@ -322,27 +322,27 @@ func TestDirectorQueryWithNormalization(t *testing.T) {
 	)
 
 	expected := `query {
-director(func: allofterms(name@en, "steven spielberg")) @normalize {
-director: name@en
-director.film {
-film: name@en
-initial_release_date
-starring(first: 2) {
-performance.actor {
-actor: name@en
-}
-performance.character {
-character: name@en
-}
-}
-country {
-country: name@en
-}
-}
-}
+  director(func: allofterms(name@en, "steven spielberg")) @normalize {
+    director: name@en
+    director.film {
+      film: name@en
+      initial_release_date
+      starring(first: 2) {
+        performance.actor {
+          actor: name@en
+        }
+        performance.character {
+          character: name@en
+        }
+      }
+      country {
+        country: name@en
+      }
+    }
+  }
 }`
 
-	result := q.String()
+	result := q.StringIndented()
 	if result != expected {
 		t.Errorf("\nexpected: %s\ngot: %s", expected, result)
 	}
@@ -371,27 +371,27 @@ func TestDirectorQueryWithNestedNormalization(t *testing.T) {
 	)
 
 	expected := `query {
-director(func: allofterms(name@en, "steven spielberg")) {
-director: name@en
-director.film {
-film: name@en
-initial_release_date
-starring(first: 2) @normalize {
-performance.actor {
-actor: name@en
-}
-performance.character {
-character: name@en
-}
-}
-country {
-country: name@en
-}
-}
-}
+  director(func: allofterms(name@en, "steven spielberg")) {
+    director: name@en
+    director.film {
+      film: name@en
+      initial_release_date
+      starring(first: 2) @normalize {
+        performance.actor {
+          actor: name@en
+        }
+        performance.character {
+          character: name@en
+        }
+      }
+      country {
+        country: name@en
+      }
+    }
+  }
 }`
 
-	result := q.String()
+	result := q.StringIndented()
 	if result != expected {
 		t.Errorf("\nexpected: %s\ngot: %s", expected, result)
 	}
